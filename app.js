@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 const { connectToMongoDB } = require("./DB_Connection");
+const { User } = require("./UserModel");
 
 dotenv.config();
 
@@ -18,6 +19,28 @@ if (DEV_MODE === "DEV") {
 
 app.get("/", (req, res) => {
   res.send({ result: "hello, world" });
+});
+
+app.post("/api/v1/users", async (req, res) => {
+  const userInfo = req.body;
+
+  try {
+    const user = User(userInfo);
+    const savedUser = await user.save();
+    // send the response if user saved successfully
+    res.status(200).json({
+      state: "success",
+      stateCode: 200,
+      data: savedUser,
+    });
+  } catch (err) {
+    console.log("failed to save the user");
+    res.status(400).json({
+      state: "faild",
+      stateCode: 400,
+      message: " failed to save the data in the database.",
+    });
+  }
 });
 
 app.listen(PORT_NUM, () => {
