@@ -1,6 +1,6 @@
-const { validationResult } = require("express-validator");
 const { User } = require("../models/UserModel");
-const createUser = async (req, res) => {
+
+const signUp = async (req, res) => {
   const userInfo = req.body;
 
   try {
@@ -16,7 +16,7 @@ const createUser = async (req, res) => {
     res.status(500).json({
       state: "failed",
       stateCode: 500,
-      message: "Internal error",
+      message: ["Internal error"],
     });
   }
 };
@@ -33,12 +33,67 @@ const getUsers = async (req, res) => {
     res.status(500).json({
       state: "failed",
       stateCode: 500,
-      message: `internal error: ${err}`,
+      message: [`internal error: ${err}`],
+    });
+  }
+};
+
+const getUserByPhoneNumber = async (req, res) => {
+  const { phoneNumber } = req.params;
+  try {
+    const user = await User.findOne({ phoneNumber: phoneNumber });
+    if (!user) {
+      res.status(404).json({
+        state: "failed",
+        stateCode: 404,
+        message: [`the user with phone number (${phoneNumber}) is not found.`],
+      });
+      return;
+    }
+    res.status(200).json({
+      state: "success",
+      stateCode: 200,
+      data: user,
+    });
+  } catch (err) {
+    res.status(500).json({
+      state: "failed",
+      stateCode: 500,
+      message: [`internal error: ${err}`],
+    });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deletedUser = await User.findByIdAndDelete(id);
+    if (!deletedUser) {
+      res.status(404).json({
+        state: "failed",
+        stateCode: 404,
+        message: [`the user with id (${id}) is not found.`],
+      });
+      return;
+    }
+
+    res.status(200).json({
+      state: "success",
+      stateCode: 200,
+      data: deletedUser,
+    });
+  } catch (err) {
+    res.status(500).json({
+      state: "failed",
+      stateCode: 500,
+      message: [`internal error: ${err}`],
     });
   }
 };
 
 module.exports = {
-  createUser,
+  deleteUser,
+  signUp,
   getUsers,
+  getUserByPhoneNumber,
 };
