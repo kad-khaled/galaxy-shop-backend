@@ -1,4 +1,4 @@
-const { body, validationResult } = require("express-validator");
+const { body, param, validationResult } = require("express-validator");
 const { User } = require("../models/UserModel");
 
 const listValidator = [
@@ -29,6 +29,17 @@ const listValidator = [
   body("location").optional(),
 ];
 
+const listDeleteValidator = [
+  param("id")
+    .isMongoId()
+    .withMessage("The id of the object you want to delete is not valid."),
+];
+
+const listLoginValidator = [
+  body("password").notEmpty().withMessage("the password is required."),
+  body("phoneNumber").notEmpty().withMessage("the phone number is required."),
+];
+
 const handelErrors = (req, res, next) => {
   const results = validationResult(req);
   if (!results.isEmpty()) {
@@ -43,6 +54,11 @@ const handelErrors = (req, res, next) => {
 };
 
 const createUserValidator = [listValidator, handelErrors];
+const deleteUserValidator = [listDeleteValidator, handelErrors];
+const loginValidator = [listLoginValidator, handelErrors];
+
 module.exports = {
   createUserValidator,
+  deleteUserValidator,
+  loginValidator,
 };

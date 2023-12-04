@@ -2,9 +2,6 @@ const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 const { connectToMongoDB } = require("./DB_Connection");
-const { User } = require("./models/UserModel");
-const { body, validationResult } = require("express-validator");
-const { Error } = require("mongoose");
 const UserRoutes = require("./routes/UserRoute");
 
 dotenv.config();

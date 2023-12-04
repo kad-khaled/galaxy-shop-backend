@@ -1,4 +1,5 @@
 const { User } = require("../models/UserModel");
+const bcryprt = require("bcrypt");
 
 const signUp = async (req, res) => {
   const userInfo = req.body;
@@ -91,7 +92,44 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const login = async (req, res) => {
+  const { phoneNumber, password } = req.body;
+  try {
+    const user = await User.findOne({ phoneNumber: phoneNumber });
+    if (!user) {
+      res.status(404).json({
+        state: "failed",
+        stateCode: 404,
+        message: [`this user with phone number (${phoneNumber}) is not exist.`],
+      });
+      return;
+    }
+    const isChecked = await bcryprt.compare(password, user.password);
+    if (!isChecked) {
+      res.status(404).json({
+        state: "failed",
+        stateCode: 400,
+        message: [`The password you put is wrrong.`],
+      });
+      return;
+    }
+
+    res.status(200).json({
+      state: "success",
+      stateCode: 200,
+      data: user,
+    });
+  } catch (err) {
+    res.status(500).json({
+      state: "failed",
+      stateCode: 500,
+      message: [`internal error: ${err}`],
+    });
+  }
+};
+
 module.exports = {
+  login,
   deleteUser,
   signUp,
   getUsers,
