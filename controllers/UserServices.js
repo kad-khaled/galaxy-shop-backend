@@ -17,7 +17,7 @@ const signUp = async (req, res) => {
     res.status(500).json({
       state: "failed",
       stateCode: 500,
-      message: ["Internal error"],
+      message: "Internal error",
     });
   }
 };
@@ -34,7 +34,7 @@ const getUsers = async (req, res) => {
     res.status(500).json({
       state: "failed",
       stateCode: 500,
-      message: [`internal error: ${err}`],
+      message: `internal error: ${err}`,
     });
   }
 };
@@ -73,7 +73,7 @@ const deleteUser = async (req, res) => {
       res.status(404).json({
         state: "failed",
         stateCode: 404,
-        message: [`the user with id (${id}) is not found.`],
+        message: `the user with id (${id}) is not found.`,
       });
       return;
     }
@@ -87,7 +87,7 @@ const deleteUser = async (req, res) => {
     res.status(500).json({
       state: "failed",
       stateCode: 500,
-      message: [`internal error: ${err}`],
+      message: `internal error: ${err}`,
     });
   }
 };
@@ -100,7 +100,7 @@ const login = async (req, res) => {
       res.status(404).json({
         state: "failed",
         stateCode: 404,
-        message: [`this user with phone number (${phoneNumber}) is not exist.`],
+        message: `this user with phone number (${phoneNumber}) is not exist.`,
       });
       return;
     }
@@ -109,7 +109,7 @@ const login = async (req, res) => {
       res.status(404).json({
         state: "failed",
         stateCode: 400,
-        message: [`The password you put is wrrong.`],
+        message: `The password you put is wrrong.`,
       });
       return;
     }
@@ -123,7 +123,7 @@ const login = async (req, res) => {
     res.status(500).json({
       state: "failed",
       stateCode: 500,
-      message: [`internal error: ${err}`],
+      message: `internal error: ${err}`,
     });
   }
 };

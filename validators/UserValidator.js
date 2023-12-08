@@ -46,7 +46,7 @@ const handelErrors = (req, res, next) => {
     res.status(400).json({
       state: "faild",
       stateCode: 400,
-      message: results.array().map((r) => r.msg),
+      message: results.array().map((r) => r.msg)[0],
     });
     return;
   }
