@@ -1,7 +1,7 @@
 const { body, param, validationResult } = require("express-validator");
 const { User } = require("../models/UserModel");
 
-const listValidator = [
+const listSignUpValidator = [
   body("firstName").notEmpty().withMessage("The first name is required."),
   body("lastName").notEmpty().withMessage("The last name is required."),
   body("phoneNumber")
@@ -53,12 +53,12 @@ const handelErrors = (req, res, next) => {
   next();
 };
 
-const createUserValidator = [listValidator, handelErrors];
+const SignUpValidator = [listSignUpValidator, handelErrors];
 const deleteUserValidator = [listDeleteValidator, handelErrors];
 const loginValidator = [listLoginValidator, handelErrors];
 
 module.exports = {
-  createUserValidator,
+  SignUpValidator,
   deleteUserValidator,
   loginValidator,
 };

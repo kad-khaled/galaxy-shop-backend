@@ -8,7 +8,7 @@ const {
   getUserByPhoneNumber,
 } = require("../controllers/UserServices");
 const {
-  createUserValidator,
+  SignUpValidator,
   deleteUserValidator,
   loginValidator,
 } = require("../validators/UserValidator");
@@ -16,7 +16,7 @@ const {
 const UserRoutes = express.Router();
 
 UserRoutes.post("/users/login", loginValidator, login);
-UserRoutes.post("/users", createUserValidator, signUp);
+UserRoutes.post("/users", SignUpValidator, signUp);
 UserRoutes.get("/users", getUsers);
 UserRoutes.get("/users/:phoneNumber", getUserByPhoneNumber);
 UserRoutes.delete("/users/:id", deleteUserValidator, deleteUser);

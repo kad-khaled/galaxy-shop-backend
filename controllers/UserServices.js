@@ -47,7 +47,7 @@ const getUserByPhoneNumber = async (req, res) => {
       res.status(404).json({
         state: "failed",
         stateCode: 404,
-        message: [`the user with phone number (${phoneNumber}) is not found.`],
+        message: `the user with phone number (${phoneNumber}) is not found.`,
       });
       return;
     }
@@ -60,7 +60,7 @@ const getUserByPhoneNumber = async (req, res) => {
     res.status(500).json({
       state: "failed",
       stateCode: 500,
-      message: [`internal error: ${err}`],
+      message: `internal error: ${err}`,
     });
   }
 };
