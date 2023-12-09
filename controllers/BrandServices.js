@@ -27,6 +27,32 @@ const getListBrand = async (req, res) => {
   }
 };
 
+const getBrandById = async (req, res) => {
+  const { id: brandId } = req.params;
+  try {
+    const brand = await Brand.findById({ _id: brandId });
+    if (!brand) {
+      res.status(404).json({
+        state: "failed",
+        stateCode: 404,
+        message: `the brand with id( ${brandId} ) not found.`,
+      });
+      return;
+    }
+    res.status(200).json({
+      state: "success",
+      stateCode: 200,
+      data: brand,
+    });
+  } catch (err) {
+    res.status(500).json({
+      state: "failed",
+      stateCode: 500,
+      message: `internal error: ${err}`,
+    });
+  }
+};
 module.exports = {
   getListBrand,
+  getBrandById,
 };
