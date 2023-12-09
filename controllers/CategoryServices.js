@@ -1,21 +1,23 @@
-const Brand = require("../models/BrandModel");
+const Category = require("../models/CategoryModel");
 const slugify = require("slugify");
 
-const getListBrand = async (req, res) => {
+const getListCategory = async (req, res) => {
   try {
     const query = req.query;
     const pageNumber = query.page * 1 || 1;
     const pageSize = query.size * 1 || 10;
     const skipedItems = (pageNumber - 1) * pageSize;
 
-    const brands = await Brand.find({}).skip(skipedItems).limit(pageSize);
+    const categories = await Category.find({})
+      .skip(skipedItems)
+      .limit(pageSize);
 
     res.status(200).json({
       state: "success",
       stateCode: 200,
-      data: brands,
+      data: categories,
       metaData: {
-        pageSize: brands.length || 0,
+        pageSize: categories.length || 0,
         pagenumber: pageNumber,
       },
     });
@@ -28,22 +30,22 @@ const getListBrand = async (req, res) => {
   }
 };
 
-const getBrandById = async (req, res) => {
-  const { id: brandId } = req.params;
+const getCategoryById = async (req, res) => {
+  const { id: categoryId } = req.params;
   try {
-    const brand = await Brand.findById({ _id: brandId });
-    if (!brand) {
+    const category = await Category.findById({ _id: categoryId });
+    if (!category) {
       res.status(404).json({
         state: "failed",
         stateCode: 404,
-        message: `the brand with id( ${brandId} ) not found.`,
+        message: `the category with id( ${categoryId} ) not found.`,
       });
       return;
     }
     res.status(200).json({
       state: "success",
       stateCode: 200,
-      data: brand,
+      data: category,
     });
   } catch (err) {
     res.status(500).json({
@@ -54,26 +56,26 @@ const getBrandById = async (req, res) => {
   }
 };
 
-const deleteBrandById = async (req, res) => {
-  const { id: brandId } = req.params;
+const deleteCategoryById = async (req, res) => {
+  const { id: categoryId } = req.params;
   try {
-    const deletedBrand = await Brand.findOneAndDelete(
-      { _id: brandId },
+    const deletedCategory = await Category.findOneAndDelete(
+      { _id: categoryId },
       { new: true }
     );
 
-    if (!deletedBrand) {
+    if (!deletedCategory) {
       res.status(404).json({
         state: "failed",
         stateCode: 404,
-        message: `the brand with id( ${brandId} ) not found.`,
+        message: `the category with id( ${categoryId} ) not found.`,
       });
       return;
     }
     res.status(200).json({
       state: "success",
       stateCode: 200,
-      data: deletedBrand,
+      data: deletedCategory,
     });
   } catch (err) {
     res.status(500).json({
@@ -84,26 +86,26 @@ const deleteBrandById = async (req, res) => {
   }
 };
 
-const createNewBrand = async (req, res) => {
+const createNewCategory = async (req, res) => {
   const { name } = req.body;
   const slug = slugify(name);
-  const brand = Brand({ name: name, slug: slug });
+  const category = Category({ name: name, slug: slug });
 
   try {
-    const newBrand = await brand.save();
+    const newCategory = await category.save();
 
-    if (!newBrand) {
+    if (!newCategory) {
       res.status(404).json({
         state: "failed",
         stateCode: 400,
-        message: `Failed to create a new brand with name ${name}.`,
+        message: `Failed to create a new category with name ${name}.`,
       });
       return;
     }
     res.status(200).json({
       state: "success",
       stateCode: 201,
-      data: newBrand,
+      data: newCategory,
     });
   } catch (err) {
     res.status(500).json({
@@ -114,28 +116,28 @@ const createNewBrand = async (req, res) => {
   }
 };
 
-const updateBrandById = async (req, res) => {
+const updateCategoryById = async (req, res) => {
   const { name: newName } = req.body;
-  const { id: brandId } = req.params;
+  const { id: categoryId } = req.params;
   try {
-    const updatedBrand = await Brand.findOneAndUpdate(
-      { _id: brandId },
+    const updatedCategory = await Category.findOneAndUpdate(
+      { _id: categoryId },
       { name: newName, slug: slugify(newName) },
       { new: true }
     );
 
-    if (!updatedBrand) {
+    if (!updatedCategory) {
       res.status(404).json({
         state: "failed",
         stateCode: 404,
-        message: `the brand with id( ${brandId} ) not found.`,
+        message: `the category with id( ${categoryId} ) not found.`,
       });
       return;
     }
     res.status(200).json({
       state: "success",
       stateCode: 200,
-      data: updatedBrand,
+      data: updatedCategory,
     });
   } catch (err) {
     res.status(500).json({
@@ -147,9 +149,9 @@ const updateBrandById = async (req, res) => {
 };
 
 module.exports = {
-  getListBrand,
-  getBrandById,
-  deleteBrandById,
-  createNewBrand,
-  updateBrandById,
+  getListCategory,
+  getCategoryById,
+  deleteCategoryById,
+  createNewCategory,
+  updateCategoryById,
 };
