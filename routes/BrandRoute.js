@@ -1,9 +1,8 @@
 const express = require("express");
+const { getListBrand } = require("../controllers/BrandServices");
 
 const Brandroutes = express.Router();
-Brandroutes.get("/brands", (req, res) => {
-  res.json("return list of brands");
-});
+Brandroutes.get("/brands", getListBrand);
 Brandroutes.post("/brands", (req, res) => {
   res.json("create a new brand");
 });
