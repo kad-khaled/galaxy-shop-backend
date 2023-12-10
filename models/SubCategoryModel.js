@@ -16,6 +16,7 @@ const subCategorySchema = new mongoose.Schema(
       ref: "categories",
     },
     slug: { type: String, lowercase: true },
+    image: String,
   },
   { timestamps: true }
 );

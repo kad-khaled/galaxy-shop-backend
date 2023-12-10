@@ -7,7 +7,15 @@ const signUp = async (req, res) => {
   try {
     const user = User(userInfo);
     const savedUser = await user.save();
-    // send the response if user saved successfully
+    if (!savedUser) {
+      res.status(404).json({
+        state: "failed",
+        stateCode: 400,
+        message: `Failed to signUp a new user .`,
+      });
+      return;
+    }
+    delete savedUser.__v;
     res.status(200).json({
       state: "success",
       stateCode: 200,
@@ -24,7 +32,7 @@ const signUp = async (req, res) => {
 
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({}).select("-__v");
     res.status(200).json({
       state: "success",
       stateCode: 200,
@@ -42,7 +50,9 @@ const getUsers = async (req, res) => {
 const getUserByPhoneNumber = async (req, res) => {
   const { phoneNumber } = req.params;
   try {
-    const user = await User.findOne({ phoneNumber: phoneNumber });
+    const user = await User.findOne({ phoneNumber: phoneNumber }).select(
+      "-__v"
+    );
     if (!user) {
       res.status(404).json({
         state: "failed",
@@ -68,7 +78,7 @@ const getUserByPhoneNumber = async (req, res) => {
 const deleteUser = async (req, res) => {
   const { id } = req.params;
   try {
-    const deletedUser = await User.findByIdAndDelete(id);
+    const deletedUser = await User.findByIdAndDelete(id).select("-__v");
     if (!deletedUser) {
       res.status(404).json({
         state: "failed",
@@ -95,7 +105,9 @@ const deleteUser = async (req, res) => {
 const login = async (req, res) => {
   const { phoneNumber, password } = req.body;
   try {
-    const user = await User.findOne({ phoneNumber: phoneNumber });
+    const user = await User.findOne({ phoneNumber: phoneNumber }).select(
+      "-__v"
+    );
     if (!user) {
       res.status(404).json({
         state: "failed",

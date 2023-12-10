@@ -1,5 +1,6 @@
 const { param, body, validationResult } = require("express-validator");
 const Brand = require("../models/BrandModel");
+const handelValidationErrors = require("../ErrorHandling");
 
 const mongoIDValidator = param("id")
   .isMongoId()
@@ -26,26 +27,13 @@ const brandNameValidator = body("name")
     }
   });
 
-const handelErrors = (req, res, next) => {
-  const results = validationResult(req);
-  if (!results.isEmpty()) {
-    res.status(400).json({
-      state: "faild",
-      stateCode: 400,
-      message: results.array().map((r) => r.msg)[0],
-    });
-    return;
-  }
-  next();
-};
-
-const getBrandByIdValidator = [mongoIDValidator, handelErrors];
-const deleteBrandByIdValidator = [mongoIDValidator, handelErrors];
-const CreateNewBrandValidator = [brandNameValidator, handelErrors];
+const getBrandByIdValidator = [mongoIDValidator, handelValidationErrors];
+const deleteBrandByIdValidator = [mongoIDValidator, handelValidationErrors];
+const CreateNewBrandValidator = [brandNameValidator, handelValidationErrors];
 const updateBrandByIdValidator = [
   mongoIDValidator,
   brandNameValidator,
-  handelErrors,
+  handelValidationErrors,
 ];
 
 module.exports = {

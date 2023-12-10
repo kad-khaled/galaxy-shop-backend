@@ -10,7 +10,8 @@ const getListCategory = async (req, res) => {
 
     const categories = await Category.find({})
       .skip(skipedItems)
-      .limit(pageSize);
+      .limit(pageSize)
+      .select("-__v");
 
     res.status(200).json({
       state: "success",
@@ -33,7 +34,9 @@ const getListCategory = async (req, res) => {
 const getCategoryById = async (req, res) => {
   const { id: categoryId } = req.params;
   try {
-    const category = await Category.findById({ _id: categoryId });
+    const category = await Category.findById({ _id: categoryId }).select(
+      "-__v"
+    );
     if (!category) {
       res.status(404).json({
         state: "failed",
@@ -62,7 +65,7 @@ const deleteCategoryById = async (req, res) => {
     const deletedCategory = await Category.findOneAndDelete(
       { _id: categoryId },
       { new: true }
-    );
+    ).select("-__v");
 
     if (!deletedCategory) {
       res.status(404).json({
@@ -124,7 +127,7 @@ const updateCategoryById = async (req, res) => {
       { _id: categoryId },
       { name: newName, slug: slugify(newName) },
       { new: true }
-    );
+    ).select("-__v");
 
     if (!updatedCategory) {
       res.status(404).json({

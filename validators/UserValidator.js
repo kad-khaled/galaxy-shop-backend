@@ -1,5 +1,6 @@
 const { body, param, validationResult } = require("express-validator");
 const { User } = require("../models/UserModel");
+const handelValidationErrors = require("../ErrorHandling");
 
 const listSignUpValidator = [
   body("firstName").notEmpty().withMessage("The first name is required."),
@@ -40,22 +41,9 @@ const listLoginValidator = [
   body("phoneNumber").notEmpty().withMessage("the phone number is required."),
 ];
 
-const handelErrors = (req, res, next) => {
-  const results = validationResult(req);
-  if (!results.isEmpty()) {
-    res.status(400).json({
-      state: "faild",
-      stateCode: 400,
-      message: results.array().map((r) => r.msg)[0],
-    });
-    return;
-  }
-  next();
-};
-
-const SignUpValidator = [listSignUpValidator, handelErrors];
-const deleteUserValidator = [listDeleteValidator, handelErrors];
-const loginValidator = [listLoginValidator, handelErrors];
+const SignUpValidator = [listSignUpValidator, handelValidationErrors];
+const deleteUserValidator = [listDeleteValidator, handelValidationErrors];
+const loginValidator = [listLoginValidator, handelValidationErrors];
 
 module.exports = {
   SignUpValidator,

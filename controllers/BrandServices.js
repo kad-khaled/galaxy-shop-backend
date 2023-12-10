@@ -8,7 +8,10 @@ const getListBrand = async (req, res) => {
     const pageSize = query.size * 1 || 10;
     const skipedItems = (pageNumber - 1) * pageSize;
 
-    const brands = await Brand.find({}).skip(skipedItems).limit(pageSize);
+    const brands = await Brand.find({})
+      .skip(skipedItems)
+      .limit(pageSize)
+      .select("-__v");
 
     res.status(200).json({
       state: "success",
@@ -31,7 +34,7 @@ const getListBrand = async (req, res) => {
 const getBrandById = async (req, res) => {
   const { id: brandId } = req.params;
   try {
-    const brand = await Brand.findById({ _id: brandId });
+    const brand = await Brand.findById({ _id: brandId }).select("-__v");
     if (!brand) {
       res.status(404).json({
         state: "failed",
@@ -60,7 +63,7 @@ const deleteBrandById = async (req, res) => {
     const deletedBrand = await Brand.findOneAndDelete(
       { _id: brandId },
       { new: true }
-    );
+    ).select("-__v");
 
     if (!deletedBrand) {
       res.status(404).json({
@@ -100,6 +103,7 @@ const createNewBrand = async (req, res) => {
       });
       return;
     }
+    delete newBrand.__v;
     res.status(200).json({
       state: "success",
       stateCode: 201,
@@ -122,7 +126,7 @@ const updateBrandById = async (req, res) => {
       { _id: brandId },
       { name: newName, slug: slugify(newName) },
       { new: true }
-    );
+    ).select("-__v");
 
     if (!updatedBrand) {
       res.status(404).json({

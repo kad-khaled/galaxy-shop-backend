@@ -1,5 +1,6 @@
 const { param, body, validationResult } = require("express-validator");
 const Category = require("../models/CategoryModel");
+const handelValidationErrors = require("../ErrorHandling");
 
 const mongoIDValidator = param("id")
   .isMongoId()
@@ -26,26 +27,16 @@ const categoryNameValidator = body("name")
     }
   });
 
-const handelErrors = (req, res, next) => {
-  const results = validationResult(req);
-  if (!results.isEmpty()) {
-    res.status(400).json({
-      state: "faild",
-      stateCode: 400,
-      message: results.array().map((r) => r.msg)[0],
-    });
-    return;
-  }
-  next();
-};
-
-const getCategoryByIdValidator = [mongoIDValidator, handelErrors];
-const deleteCategoryByIdValidator = [mongoIDValidator, handelErrors];
-const CreateNewCategoryValidator = [categoryNameValidator, handelErrors];
+const getCategoryByIdValidator = [mongoIDValidator, handelValidationErrors];
+const deleteCategoryByIdValidator = [mongoIDValidator, handelValidationErrors];
+const CreateNewCategoryValidator = [
+  categoryNameValidator,
+  handelValidationErrors,
+];
 const updateCategoryByIdValidator = [
   mongoIDValidator,
   categoryNameValidator,
-  handelErrors,
+  handelValidationErrors,
 ];
 
 module.exports = {
