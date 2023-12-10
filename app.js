@@ -6,6 +6,8 @@ const UserRoutes = require("./routes/UserRoute");
 const BrandRoutes = require("./routes/BrandRoute");
 const CategoryRoutes = require("./routes/CategoryRoute");
 const SubCategorydroutes = require("./routes/SubCategoryRoute");
+const ProductRoutes = require("./routes/ProductRoute");
+
 dotenv.config();
 const app = express();
 
@@ -21,6 +23,7 @@ app.use("/api/v1", UserRoutes);
 app.use("/api/v1", BrandRoutes);
 app.use("/api/v1", SubCategorydroutes);
 app.use("/api/v1", CategoryRoutes);
+app.use("/api/v1", ProductRoutes);
 
 app.get("/", (req, res) => {
   res.send({ result: "hello, world" });
