@@ -3,14 +3,13 @@ const bcryprt = require("bcrypt");
 
 const signUp = async (req, res) => {
   const userInfo = req.body;
-
   try {
     const user = User(userInfo);
     const savedUser = await user.save();
     if (!savedUser) {
       res.status(404).json({
         state: "failed",
-        stateCode: 400,
+        stateCode: 404,
         message: `Failed to signUp a new user .`,
       });
       return;

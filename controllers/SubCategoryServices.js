@@ -8,8 +8,8 @@ const getListSubCategories = async (req, res) => {
     const pageNumber = query.page * 1 || 1;
     const pageSize = query.size * 1 || 10;
     const skipedItems = (pageNumber - 1) * pageSize;
-
-    const subCategories = await SubCategory.find({})
+    const categoryId = query.categoryId;
+    const subCategories = await SubCategory.find({ categoryID: categoryId })
       .skip(skipedItems)
       .limit(pageSize)
       .populate({ path: "categoryID", select: "-__v" })
